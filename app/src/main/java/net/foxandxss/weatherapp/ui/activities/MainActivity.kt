@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import net.foxandxss.weatherapp.ui.adapters.ForecastListAdapter
 import net.foxandxss.weatherapp.R
 import net.foxandxss.weatherapp.domain.commands.RequestForecastCommand
+import net.foxandxss.weatherapp.domain.model.Forecast
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +23,12 @@ class MainActivity : AppCompatActivity() {
         doAsync() {
             val result = RequestForecastCommand("2978105").execute()
             uiThread {
-                forecastList.adapter = ForecastListAdapter(result)
+                forecastList.adapter = ForecastListAdapter(result,
+                    object : ForecastListAdapter.OnItemClickListener{
+                        override fun invoke(forecast: Forecast) {
+                            toast(forecast.date)
+                        }
+                    })
             }
         }
 
